@@ -20,7 +20,14 @@ const markup = galleryItems
 
 galleryRef.innerHTML = markup;
 
-const instance = basicLightbox.create(`<img width="800" height="600">`);
+const instance = basicLightbox.create(`<img width="800" height="600">`, {
+  onShow: () => {
+    document.addEventListener("keydown", onEscClick);
+  },
+  onClose: () => {
+    document.removeEventListener("keydown", onEscClick);
+  },
+});
 const imgLightboxRef = instance.element().querySelector("img");
 
 galleryRef.addEventListener("click", onGalleryClick);
@@ -36,13 +43,10 @@ function onGalleryClick(event) {
   imgLightboxRef.src = `${currentImage.dataset.source}`;
 
   instance.show();
-
-  document.addEventListener("keydown", onEscClick);
 }
 
 function onEscClick(event) {
   if (event.code === "Escape") {
     instance.close();
-    document.removeEventListener("keydown", onEscClick);
   }
 }
